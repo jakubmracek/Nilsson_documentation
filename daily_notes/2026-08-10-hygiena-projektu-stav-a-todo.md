@@ -8,15 +8,15 @@ tags: [hygiena, udrzba, tech-debt, migrace]
 
 > Institucionalizace čistoty systému: sirotci, drift databáze proti typům a
 > splácení typového dluhu `(supabase as any)`.
-> Aktualizováno **10. 8. 2026** · větev `master` · poslední commit `ee3756d` · 10 commitů.
+> Aktualizováno **10. 8. 2026** · větev `master` · poslední commit `49c6a02` · 13 commitů.
 > Vizuální přehled (artefakt): https://claude.ai/code/artifact/ed67ac78-c094-4ab2-a402-850c69422e3c
 
 ## Přehled v číslech
 
 | Metrika | Hodnota |
 |---|---|
-| Typový dluh `(supabase as any)` | **233 → 133** (−100, ~43 % splaceno) |
-| Moduly vyčištěné | 3 — rozvrh · družina · platby |
+| Typový dluh `(supabase as any)` | **233 → 97** (−136, ~58 % splaceno) |
+| Moduly vyčištěné | 6 — rozvrh · družina · platby · zápis · třídnice · essl |
 | Migrace ověřené v DB | 061–070 (drift splacen) |
 | Reálná vada opravená | 1 — detail transakce |
 | Automatické guardy | 2 — CI ratchet · čtvrtletní audit |
@@ -49,7 +49,10 @@ tags: [hygiena, udrzba, tech-debt, migrace]
 | rozvrh — `app/actions/rozvrh.ts` | 17 | 0 | `82d41f9` | ✅ hotovo |
 | družina — 9 souborů | 49 | 1 | `9965657` | ✅ hotovo (1 drift cast) |
 | platby — 10 souborů | 35 | 0 | `ee3756d` | ✅ hotovo |
-| zbytek systému | — | 133 | — | ⬜ to-do |
+| zápis (enrollment) — 3 soubory | 9 | 0 | `7f2c5ca` | ✅ hotovo |
+| třídnice — 4 soubory | 19 | 0 | `4d164d5` | ✅ hotovo |
+| essl (spisovka) — 3 soubory | 8 | 0 | `49c6a02` | ✅ hotovo |
+| zbytek systému | — | 97 | — | ⬜ to-do |
 
 **Metoda:** cast → `supabase`, `npm run typecheck`, opravit co `as any` schovával,
 snížit `BASELINE` v ratchetu, commit. Ratchet drží číslo, aby jen klesalo — nové
@@ -60,9 +63,9 @@ casty spadnou v CI.
 ## To-do (dle priority)
 
 ### Priorita 1
-- [ ] **Pokračovat v as-any burndownu** — zbývá 133 castů. Rychlé ověřitelné dávky.
-  Kandidáti: `enrollment` (7) · `essl/queries` (7) · `tridnice-priznaky-report` (7)
-  · `tripartita` (6) · `tridni-kniha` (5) · `tridni-kniha/den` (6).
+- [ ] **Pokračovat v as-any burndownu** — zbývá 97 castů. Rychlé ověřitelné dávky.
+  Kandidáti: `tripartita` (6), pak zbytek dle
+  `git grep -c "supabase as any" -- app lib components | sort -t: -k2 -rn`.
 
 ### Priorita 2
 - [ ] **Baseline reconciliation migrací** — narovnat migrační stav: jeden baseline
@@ -95,7 +98,7 @@ casty spadnou v CI.
 
 ## Jak drží čistota
 
-- **Ratchet** `scripts/check-as-any.mjs` (baseline 133) v CI zablokuje nové casty.
+- **Ratchet** `scripts/check-as-any.mjs` (baseline 97) v CI zablokuje nové casty.
 - **`npm run db:types`** po každé migraci brání driftu typů.
 - **Čtvrtletní audit** přes `scripts/db-audit.sql` hlídá sirotky a mrtvý RLS.
 
