@@ -8,15 +8,15 @@ tags: [hygiena, udrzba, tech-debt, migrace]
 
 > Institucionalizace čistoty systému: sirotci, drift databáze proti typům a
 > splácení typového dluhu `(supabase as any)`.
-> Aktualizováno **10. 8. 2026** · větev `master` · poslední commit `49c6a02` · 13 commitů.
+> Aktualizováno **10. 8. 2026** · větev `master` · poslední commit `9250dad` · 16 commitů.
 > Vizuální přehled (artefakt): https://claude.ai/code/artifact/ed67ac78-c094-4ab2-a402-850c69422e3c
 
 ## Přehled v číslech
 
 | Metrika | Hodnota |
 |---|---|
-| Typový dluh `(supabase as any)` | **233 → 97** (−136, ~58 % splaceno) |
-| Moduly vyčištěné | 6 — rozvrh · družina · platby · zápis · třídnice · essl |
+| Typový dluh `(supabase as any)` | **233 → 53** (−180, ~77 % splaceno) |
+| Moduly vyčištěné | 9 — rozvrh · družina · platby · zápis · třídnice · essl · tripartita · výkaz PPČ · souhlasy |
 | Migrace ověřené v DB | 061–070 (drift splacen) |
 | Reálná vada opravená | 1 — detail transakce |
 | Automatické guardy | 2 — CI ratchet · čtvrtletní audit |
@@ -52,7 +52,10 @@ tags: [hygiena, udrzba, tech-debt, migrace]
 | zápis (enrollment) — 3 soubory | 9 | 0 | `7f2c5ca` | ✅ hotovo |
 | třídnice — 4 soubory | 19 | 0 | `4d164d5` | ✅ hotovo |
 | essl (spisovka) — 3 soubory | 8 | 0 | `49c6a02` | ✅ hotovo |
-| zbytek systému | — | 97 | — | ⬜ to-do |
+| tripartita — 5 souborů | 15 | 0 | `b2c04cf` | ✅ hotovo |
+| výkaz PPČ (rozvrh cluster) — 6 souborů | 22 | 0 | `fbd5735` | ✅ hotovo |
+| souhlasy (GDPR) — 2 soubory | 7 | 0 | `9250dad` | ✅ hotovo |
+| zbytek systému | — | 53 | — | ⬜ to-do |
 
 **Metoda:** cast → `supabase`, `npm run typecheck`, opravit co `as any` schovával,
 snížit `BASELINE` v ratchetu, commit. Ratchet drží číslo, aby jen klesalo — nové
@@ -63,8 +66,9 @@ casty spadnou v CI.
 ## To-do (dle priority)
 
 ### Priorita 1
-- [ ] **Pokračovat v as-any burndownu** — zbývá 97 castů. Rychlé ověřitelné dávky.
-  Kandidáti: `tripartita` (6), pak zbytek dle
+- [ ] **Pokračovat v as-any burndownu** — zbývá 53 castů. Rychlé ověřitelné dávky.
+  Zbývající clustery: `vp` (6) · `staff` (6) · `school-calendar` (6) ·
+  `monitoring/výkaz KÚ` (~8) + roztroušené. Hnízda dle
   `git grep -c "supabase as any" -- app lib components | sort -t: -k2 -rn`.
 
 ### Priorita 2
@@ -98,7 +102,7 @@ casty spadnou v CI.
 
 ## Jak drží čistota
 
-- **Ratchet** `scripts/check-as-any.mjs` (baseline 97) v CI zablokuje nové casty.
+- **Ratchet** `scripts/check-as-any.mjs` (baseline 53) v CI zablokuje nové casty.
 - **`npm run db:types`** po každé migraci brání driftu typů.
 - **Čtvrtletní audit** přes `scripts/db-audit.sql` hlídá sirotky a mrtvý RLS.
 
