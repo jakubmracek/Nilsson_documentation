@@ -25,7 +25,7 @@ app/dashboard/msmt/kody-zaku/
     └── KodZakaMsmtRow.tsx
         ← Client Component; inline edit per řádek
         ← save on blur / Enter; Esc = revert
-        ← auto-strip lomítko (RČ 170501/1341 → 1705011341)
+        ← auto-strip lomítko (RČ 000000/0000 → 0000000000)
         ← validace: právě 10 číslic, pouze [0-9]
 ```
 

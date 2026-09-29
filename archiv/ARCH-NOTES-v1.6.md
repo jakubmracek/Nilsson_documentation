@@ -586,12 +586,12 @@ VALUES (v_n21, v_group, '2026/2027', '2026-09-01'), ...;
 Trigger na `student_matrika_a` blokuje INSERT s výjimkou pokud:
 `pspo > 0` a `students.kod_zaka_msmt IS NULL`
 
-**Konvence hodnoty:** rodné číslo bez lomítka, 10 číslic (např. `1705011341`).
+**Konvence hodnoty:** rodné číslo bez lomítka, 10 číslic (např. `0000000000`).
 
 **Vzor — vždy nastavit před INSERT do `student_matrika_a`:**
 
 ```sql
-UPDATE students SET kod_zaka_msmt = '1705011341' WHERE id = v_s11;
+UPDATE students SET kod_zaka_msmt = '0000000000' WHERE id = v_s11;
 INSERT INTO student_matrika_a (student_id, pspo, ..., created_by)
 VALUES (v_s11, 3, ..., v_staff);
 ```
